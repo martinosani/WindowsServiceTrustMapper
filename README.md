@@ -1,4 +1,4 @@
-# WindowsServiceTrustMapper# WindowsServiceTrustMapper
+# WindowsServiceTrustMapper
 
 **WindowsServiceTrustMapper** is a PowerShell module designed to analyze Windows services from a security perspective by mapping **trust boundaries** between privileged services and user-controllable resources.
 
