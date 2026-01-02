@@ -25,14 +25,35 @@ These conditions are still frequently observed in **real-world CVEs affecting th
 
 For each Windows service, the tool analyzes:
 
-- Service execution context (account, start mode, state)  
-- Service `ImagePath` and command-line arguments  
-- Path parsing and quoting issues  
-- Executable resolution behavior  
-- File system permission risks (ACLs)  
-- Trust boundary violations between privileged services and user-controlled resources  
+- **Parsing integrity and ambiguity**
+  - Missing/empty `ImagePath` values (`MissingImagePath`)
+  - Broken or malformed quoting that can trigger ambiguous `CreateProcess` parsing (`MalformedQuotedPath`)
+  - Optional informational flags when parsing confidence is low (`LowParsingConfidence`)
 
-The output is a structured object containing findings and a **context-aware risk classification**.
+- **Classic service trust-boundary pitfalls**
+  - **Unquoted executable paths containing spaces** (the classic *unquoted service path* condition), reported as `UnquotedPathPotential`
+
+- **Execution pivots and “launcher-style” services**
+  - Services that execute via common interpreters/launchers (e.g., `cmd.exe`, `powershell.exe`/`pwsh.exe`, `wscript.exe`/`cscript.exe`, `mshta.exe`, `rundll32.exe`), reported as `ServiceRunsViaInterpreter`
+
+- **Suspicious argument patterns commonly associated with abuse**
+  - URLs in arguments (`NetworkLocationInArgs`)
+  - UNC paths in arguments (`UNCPathInArgs`)
+  - PowerShell `-EncodedCommand` usage (`EncodedCommandInArgs`)
+
+- **High-signal combinations**
+  - Interpreter + encoded command (`InterpreterEncodedCommandCombo`, **High**)
+  - Interpreter + remote targets (URL/UNC) (`InterpreterRemoteTargetCombo`, **High**)
+
+### Output format
+
+The tool returns a list of finding objects (`PSCustomObject[]`) per service. Each finding includes:
+
+- `Rule` (e.g., `UnquotedPathPotential`)
+- `Severity` (`Info|Low|Medium|High`)
+- `Category` (`Parsing|Execution|TrustBoundary`)
+- `Evidence` (the relevant path/arguments excerpt)
+- `Recommendation` (actionable remediation guidance)
 
 ---
 
