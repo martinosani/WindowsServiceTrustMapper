@@ -3,6 +3,7 @@ function Convert-WstmFindingsToJson {
     param(
         [Parameter(Mandatory)]
         [AllowNull()]
+        [AllowEmptyCollection()]
         [object[]]$Findings
     )
 

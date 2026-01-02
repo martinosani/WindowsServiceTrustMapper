@@ -23,8 +23,6 @@ These issues are still frequently observed in real-world CVEs affecting third-pa
 
 ## What the tool does
 
-**The tool is under developer**
-
 For each Windows service, the tool analyzes:
 
 - Service execution context (account, start mode, state)

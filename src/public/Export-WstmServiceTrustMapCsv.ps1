@@ -29,7 +29,7 @@ function Export-WstmServiceTrustMapCsv {
         [string]$Path,
 
         [Parameter(ParameterSetName='Pipe', ValueFromPipeline)]
-        [pscustomobject]$InputObject,
+        [PSCustomObject]$InputObject,
 
         [switch]$Force
     )

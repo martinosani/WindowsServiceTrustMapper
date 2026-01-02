@@ -39,7 +39,10 @@ function Get-WstmServiceTrustMap {
     $report = foreach ($service in $services) {
 
         $parsedPath = Resolve-ServicePathName -ServicePathName $service.PathName
+
         $findings = Test-ServicePathTrust -ParsedPath $parsedPath -IncludeInfo
+
+        $risk = Get-WstmRiskAssessment -Findings $findings
 
         [PSCustomObject]@{
             ServiceName    = $service.Name
@@ -59,8 +62,8 @@ function Get-WstmServiceTrustMap {
             
             Findings        = $findings
             FindingCount    = $findings.Count
-            RiskScore       = 0
-            RiskLevel       = ''
+            RiskScore       = $risk.RiskScore
+            RiskLevel       = $risk.RiskLevel
         }
     }
 

@@ -3,6 +3,7 @@ function Convert-WstmFindingsToSummary {
     param(
         [Parameter(Mandatory)]
         [AllowNull()]
+        [AllowEmptyCollection()]
         [object[]]$Findings
     )
 

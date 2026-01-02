@@ -2,7 +2,7 @@ function Convert-WstmReportToFlatObject {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
-        [pscustomobject]$InputObject
+        [PSCustomObject]$InputObject
     )
 
     process {
@@ -11,7 +11,7 @@ function Convert-WstmReportToFlatObject {
         $summary = Convert-WstmFindingsToSummary -Findings $findings
         $json    = Convert-WstmFindingsToJson    -Findings $findings
 
-        [pscustomobject]@{
+        [PSCustomObject]@{
             ServiceName     = $InputObject.ServiceName
             DisplayName     = $InputObject.DisplayName
             StartName       = $InputObject.StartName
@@ -27,7 +27,7 @@ function Convert-WstmReportToFlatObject {
             IsMalformed     = $InputObject.IsMalformed
             HasSpaces       = $InputObject.HasSpaces
 
-            FindingCount    = $InputObject.FindingCount
+            FindingCount    = $findings.Count
             FindingsSummary = $summary
             FindingsJson    = $json
 
