@@ -9,7 +9,7 @@ function Get-WstmServiceTrustMap {
     This function scans the Windows services on the local machine and retrieves their trust levels based on predefined criteria.
 
     .EXAMPLE
-    Get-WstmServiceTrustMap
+    Get-WstmServiceTrustMap | Format-Table - AutoSize
 
     Retrieves the trust map of all Windows services on the local machine.
 
@@ -37,14 +37,32 @@ function Get-WstmServiceTrustMap {
     }
 
     $report = foreach ($service in $services) {
+
+        $parsedPath = Resolve-ServicePathName -ServicePathName $service.PathName
+        $findings = Test-ServicePathTrust -ParsedPath $parsedPath -IncludeInfo
+
         [PSCustomObject]@{
-            ServiceName = $service.Name
-            DisplayName = $service.DisplayName
-            State       = $service.State
-            StartMode   = $service.StartMode
+            ServiceName    = $service.Name
+            DisplayName    = $service.DisplayName
+            StartName      = $service.StartName
+            StartMode      = $service.StartMode
+            State          = $service.State
+            PathName       = $service.PathName
+            
+            ExePathRaw     = $parsedPath.ExePathRaw
+            ArgsRaw        = $parsedPath.ArgsRaw
+            ParseMethod    = $parsedPath.ParseMethod
+            Confidence     = $parsedPath.Confidence
+            IsQuoted       = $parsedPath.IsQuoted
+            IsMalformed    = $parsedPath.IsMalformed
+            HasSpaces      = $parsedPath.HasSpaces
+            
+            Findings        = $findings
+            FindingCount    = $findings.Count
+            RiskScore       = 0
+            RiskLevel       = ''
         }
     }
-
 
     return $report
 }
